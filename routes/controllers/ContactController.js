@@ -36,7 +36,6 @@ exports.store = async (req, res) => {
         throw new ServerError("Please try again later");
       });
   } catch (err) {
-    console.log(err);
-    throw new ServerError("Please try again later");
+    next();
   }
 };
