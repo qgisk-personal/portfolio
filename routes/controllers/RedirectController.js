@@ -1,6 +1,8 @@
 const validUrl = require("valid-url");
 const shortid = require("shortid");
 
+const { BadRequest, ServerError, Forbidden } = require("@helpers/Errors");
+
 const DB = require("@db");
 
 exports.index = async (req, res) => {
@@ -13,7 +15,7 @@ exports.index = async (req, res) => {
 
     return res.status(404).json("No url found");
   } catch (err) {
-    res.status(500).json("Server error");
+    throw new ServerError("Something went wrong please try again later.");
   }
 };
 
@@ -22,7 +24,7 @@ exports.store = async (req, res) => {
     const { longUrl, shortUrl } = req.body;
 
     if (!validUrl.isUri(`${req.protocol}://${req.get("host")}`)) {
-      return res.status(401).json("Invalid base url");
+      throw new BadRequest("Invalid base url");
     }
 
     const urlCode = !shortUrl ? shortid.generate() : shortUrl;
@@ -49,9 +51,9 @@ exports.store = async (req, res) => {
 
       return res.json(url);
     }
-    res.status(401).json("Invalid long url");
+    throw new BadRequest("Invalid long url");
   } catch (err) {
     console.log(err);
-    res.status(500).json("Server error");
+    throw new ServerError("Something went wrong please try again later.");
   }
 };

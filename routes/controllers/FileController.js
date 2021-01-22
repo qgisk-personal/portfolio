@@ -5,7 +5,10 @@ const AWS = require("aws-sdk");
 const path = require("path");
 
 const DB = require("@db");
+
 const { DOMAIN, AWS_BUCKET, AWS_ENDPOINT, AWS_KEY, AWS_SECRET } = process.env;
+const { BadRequest, ServerError, Forbidden } = require("@helpers/Errors");
+
 
 const space = new AWS.S3({
   //Get the endpoint from the DO website for your space
@@ -18,7 +21,7 @@ exports.index = async (req, res, next) => {
   space.listObjects({ Bucket: AWS_BUCKET }, async (error, data) => {
     if (error) {
       console.error(error);
-      return res.sendStatus(500);
+      throw new ServerError("Something went wrong please try again later.");
     }
     const files = await DB.File.find({});
     res.json({ files, data });
@@ -39,7 +42,7 @@ exports.store = async (req, res, next) => {
   space.upload(uploadParameters, async (error, data) => {
     if (error) {
       console.error(error);
-      return res.sendStatus(500);
+      throw new ServerError("Something went wrong please try again later.");
     }
 
     const File = new DB.File({
@@ -58,7 +61,7 @@ exports.show = async (req, res, next) => {
   space.getObject({ Bucket: AWS_BUCKET, Key: req.params.slug }, (error, data) => {
     if (error) {
       console.error(error);
-      return res.sendStatus(500);
+      throw new ServerError("Something went wrong please try again later.");
     }
     res.json({ data });
   });

@@ -3,6 +3,8 @@ const Mail = require("@helpers/Mail");
 
 const mailTo = process.env.MAIL_TO;
 
+const { BadRequest, ServerError, Forbidden } = require("@helpers/Errors");
+
 exports.store = async (req, res) => {
   try {
     const from = req.sanitize(req.body.from);
@@ -10,8 +12,7 @@ exports.store = async (req, res) => {
     const time = req.sanitize(req.body.time);
     const body = req.sanitize(req.body.body);
 
-    if (!from || !time || !email || !body)
-      return res.status(422).json({ error: "Please provide all fields" });
+    if (!from || !time || !email || !body) throw new BadRequest("Please provide all fields");
 
     const mailOptions = {
       // from: from,
@@ -32,10 +33,10 @@ exports.store = async (req, res) => {
       })
       .catch(e => {
         console.log(e);
-        res.status(500).json("Server error");
+        throw new ServerError("Please try again later");
       });
   } catch (err) {
     console.log(err);
-    res.status(500).json("Server error");
+    throw new ServerError("Please try again later");
   }
 };
