@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
 
-const ImageSchema = new mongoose.Schema({
+const FileSchema = new mongoose.Schema({
   slug: String,
   longCDN: String,
-  shortC: String,
+  shortCDN: String,
+  type: String,
   date: {
     type: String,
     default: Date.now,
   },
 });
 
-module.exports = mongoose.model("Image", ImageSchema);
+module.exports = mongoose.model("File", FileSchema);
