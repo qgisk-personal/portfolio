@@ -53,5 +53,8 @@ app.get("/r/:code", async (req, res) => {
   }
 });
 
+// Initialize Error Middleware
+app.use(require("@middleware/handleErrors"));
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, _ => console.log(`Listening on port ${PORT}`));
