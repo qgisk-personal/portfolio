@@ -11,6 +11,6 @@ router.post("/contact", Contact, Controller.store);
 
 router
   .route("/file", Limiter)
-  .post(ensureAuthenticated, hasPerm("admin"), upload.single("file"), fileController.store);
+  .post(ensureAuthenticated, hasPerm("WRITE"), upload.single("file"), fileController.store);
 
 module.exports = router;
