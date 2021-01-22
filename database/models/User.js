@@ -12,7 +12,7 @@ const UserSchema = mongoose.Schema({
     required: true,
     type: String,
   },
-  permissons: {
+  permissions: {
     ACCESS: {
       type: Boolean,
       default: true,
