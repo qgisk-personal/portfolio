@@ -15,7 +15,7 @@ exports.index = async (req, res) => {
 
     return res.status(404).json("No url found");
   } catch (err) {
-    throw new ServerError("Something went wrong please try again later.");
+    next();
   }
 };
 
@@ -54,6 +54,6 @@ exports.store = async (req, res) => {
     throw new BadRequest("Invalid long url");
   } catch (err) {
     console.log(err);
-    throw new ServerError("Something went wrong please try again later.");
+    next();
   }
 };
