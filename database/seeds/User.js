@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const DB = require("../");
+const DB = require("@db");
 
 const users = [
   {

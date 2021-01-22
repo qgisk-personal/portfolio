@@ -2,7 +2,7 @@ const slug = require("slug");
 const shortid = require("shortid");
 
 const AWS = require("aws-sdk");
-const DB = require("../../database");
+const DB = require("@db");
 
 const { DOMAIN, AWS_BUCKET, AWS_ENDPOINT, AWS_KEY, AWS_SECRET } = process.env;
 

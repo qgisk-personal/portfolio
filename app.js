@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("module-alias/register");
 
 const expressSanitizer = require("express-sanitizer");
 const robots = require("express-robots-txt");
