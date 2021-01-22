@@ -3,14 +3,17 @@ const router = express.Router();
 
 const { Contact, Limiter } = require("./helpers/Limiters");
 const Controller = require("@controllers/ContactController");
-const fileController = require("@controllers/FileController");
+const FileController = require("@controllers/FileController");
+const AuthController = require("@controllers/AuthController");
 const { upload } = require("@helpers/fileFilter");
 const { ensureAuthenticated, hasPerm } = require("@middleware/auth");
 
 router.post("/contact", Contact, Controller.store);
 
+router.post("/auth/login", Contact, AuthController.login);
+
 router
   .route("/file", Limiter)
-  .post(ensureAuthenticated, hasPerm("WRITE"), upload.single("file"), fileController.store);
+  .post(ensureAuthenticated, hasPerm("WRITE"), upload.single("file"), FileController.store);
 
 module.exports = router;
