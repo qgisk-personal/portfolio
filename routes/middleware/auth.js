@@ -1,4 +1,6 @@
 const DB = require("@db");
+const jwt = require("jsonwebtoken");
+const { JWT_SECRET } = process.env;
 
 exports.ensureAuthenticated = async (req, res, next) => {
   try {
