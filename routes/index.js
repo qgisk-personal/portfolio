@@ -3,10 +3,10 @@ const router = express.Router();
 
 const { Contact, Limiter } = require("./helpers/Limiters");
 const Controller = require("./controllers/ContactController");
-const imageController = require("./controllers/ImageController");
-const { upload } = require("./helpers/ImageFilter");
+const fileController = require("./controllers/FileController");
+const { upload } = require("./helpers/fileFilter");
 
 router.post("/contact", Contact, Controller.store);
-router.route("/image", Limiter).post(upload.single("image"), imageController.store);
+router.route("/file", Limiter).post(upload.single("file"), fileController.store);
 
 module.exports = router;
