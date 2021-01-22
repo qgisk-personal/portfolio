@@ -10,7 +10,6 @@ const cors = require("cors");
 
 const app = express();
 
-// require("./database/");
 const DB = require("./database/");
 
 app.use(robots("./robots.txt"));
@@ -39,7 +38,7 @@ app.get("/", (req, res) => {
 
 app.use("/api", require("./routes/"));
 
-app.get("/:code", async (req, res) => {
+app.get("/r/:code", async (req, res) => {
   try {
     const url = await DB.Url.findOne({ urlCode: req.params.code });
 
