@@ -108,7 +108,7 @@ export default {
       this.email = "";
       this.subject = "";
       this.body = "";
-      this.time = "7d";
+      this.time = "7D";
       this.show = false;
       this.$nextTick(() => {
         this.show = true;
