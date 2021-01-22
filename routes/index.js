@@ -6,12 +6,13 @@ const FileController = require("@controllers/FileController");
 const AuthController = require("@controllers/AuthController");
 
 const { upload } = require("@helpers/fileFilter");
-const { Contact, Limiter } = require("@helpers/Limiters");
+const { Contact, Limiter, Auth } = require("@helpers/Limiters");
 const { ensureAuthenticated, hasPerm } = require("@middleware/auth");
 
 router.post("/contact", Contact, Controller.store);
 
-router.post("/auth/login", Contact, AuthController.login);
+router.post("/auth/login", Auth, AuthController.login);
+router.post("/auth/get-user-by-token", Limiter, AuthController.getUserByToken);
 
 router
   .route("/file", Limiter)
