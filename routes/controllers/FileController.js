@@ -9,7 +9,6 @@ const DB = require("@db");
 const { DOMAIN, AWS_BUCKET, AWS_ENDPOINT, AWS_KEY, AWS_SECRET } = process.env;
 const { BadRequest, ServerError, Forbidden } = require("@helpers/Errors");
 
-
 const space = new AWS.S3({
   //Get the endpoint from the DO website for your space
   endpoint: AWS_ENDPOINT,
@@ -29,8 +28,8 @@ exports.index = async (req, res, next) => {
 };
 
 exports.store = async (req, res, next) => {
-  let slugy = slug(`${req.file.originalname} ${shortid.generate()}`);
-  slugy += path.extname(req.file.originalname);
+  const slugy = slug(`${req.file.originalname} ${shortid.generate()}`);
+
   const uploadParameters = {
     Bucket: AWS_BUCKET,
     ContentType: req.file.mimetype,
@@ -46,7 +45,7 @@ exports.store = async (req, res, next) => {
     }
 
     const File = new DB.File({
-      slugy,
+      slug: slugy,
       longCDN: data.Location,
       shortCDN: `${DOMAIN}${data.Key}`,
       type: path.extname(req.file.originalname),
