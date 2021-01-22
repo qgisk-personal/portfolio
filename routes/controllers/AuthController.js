@@ -34,7 +34,9 @@ exports.login = async (req, res, next) => {
       }
     );
 
-    const user = await db.User.findById(foundUser.id).select("_id roles name email createdAt");
+    const user = await db.User.findById(foundUser.id).select(
+      "_id roles name email createdAt permissions"
+    );
 
     res.status(200).json({
       token,
@@ -62,7 +64,9 @@ exports.getUserByToken = (req, res, next) => {
           throw new Forbidden("Token is malformed or expired.");
         }
 
-        const user = await db.User.findById(decoded.id).select("_id roles name email createdAt");
+        const user = await db.User.findById(decoded.id).select(
+          "_id roles name email createdAt permissions"
+        );
 
         if (!user) throw new Forbidden("Token has expired.");
         return res.json(user);
