@@ -17,51 +17,63 @@ const space = new AWS.S3({
 });
 
 exports.index = async (req, res, next) => {
-  space.listObjects({ Bucket: AWS_BUCKET }, async (error, data) => {
-    if (error) {
-      console.error(error);
-      throw new ServerError("Something went wrong please try again later.");
-    }
-    const files = await DB.File.find({});
-    res.json({ files, data });
-  });
+  try {
+    space.listObjects({ Bucket: AWS_BUCKET }, async (error, data) => {
+      if (error) {
+        console.error(error);
+        throw new ServerError("Something went wrong please try again later.");
+      }
+      const files = await DB.File.find({});
+      res.json({ files, data });
+    });
+  } catch (err) {
+    next();
+  }
 };
 
 exports.store = async (req, res, next) => {
-  const slugy = slug(`${req.file.originalname} ${shortid.generate()}`);
+  try {
+    const slugy = slug(`${req.file.originalname} ${shortid.generate()}`);
 
-  const uploadParameters = {
-    Bucket: AWS_BUCKET,
-    ContentType: req.file.mimetype,
-    Body: req.file.buffer,
-    ACL: req.query.acl,
-    Key: slugy,
-  };
+    const uploadParameters = {
+      Bucket: AWS_BUCKET,
+      ContentType: req.file.mimetype,
+      Body: req.file.buffer,
+      ACL: req.query.acl,
+      Key: slugy,
+    };
 
-  space.upload(uploadParameters, async (error, data) => {
-    if (error) {
-      console.error(error);
-      throw new ServerError("Something went wrong please try again later.");
-    }
+    space.upload(uploadParameters, async (error, data) => {
+      if (error) {
+        console.error(error);
+        throw new ServerError("Something went wrong please try again later.");
+      }
 
-    const File = new DB.File({
-      slug: slugy,
-      longCDN: data.Location,
-      shortCDN: `${DOMAIN}${data.Key}`,
-      type: path.extname(req.file.originalname),
+      const File = new DB.File({
+        slug: slugy,
+        longCDN: data.Location,
+        shortCDN: `${DOMAIN}${data.Key}`,
+        type: path.extname(req.file.originalname),
+      });
+      await File.save();
+
+      res.sendStatus(200);
     });
-    await File.save();
-
-    res.sendStatus(200);
-  });
+  } catch (err) {
+    next();
+  }
 };
 
 exports.show = async (req, res, next) => {
-  space.getObject({ Bucket: AWS_BUCKET, Key: req.params.slug }, (error, data) => {
-    if (error) {
-      console.error(error);
-      throw new ServerError("Something went wrong please try again later.");
-    }
-    res.json({ data });
-  });
+  try {
+    space.getObject({ Bucket: AWS_BUCKET, Key: req.params.slug }, (error, data) => {
+      if (error) {
+        console.error(error);
+        throw new ServerError("Something went wrong please try again later.");
+      }
+      res.json({ data });
+    });
+  } catch (err) {
+    next();
+  }
 };
